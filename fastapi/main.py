@@ -21,14 +21,45 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-class TransactionBase(BaseModel):
-    amount: float
+class CategoryBase(BaseModel):
     category: str
-    description: str
-    is_income: bool
+
+class BudgetBase(BaseModel):
+    year: date
+    category: str
+    budget: float
+
+class TransactionBase(BaseModel):
     date: date
+    category: str
+    amount: float
+    description: str
+
+class IncomeBase(BaseModel):
+    year: date
+    person: str
+    amount: float
+    description: str
+
+class CategoryModel(CategoryBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class BudgetModel(BudgetBase):
+    id: int
+
+    class Config:
+        orm_mode = True
 
 class TransactionModel(TransactionBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class IncomeModel(IncomeBase):
     id: int
 
     class Config:
@@ -44,6 +75,14 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 
 models.Base.metadata.create_all(bind=engine)
+
+@app.post("/income/", response_model=IncomeModel)
+async def create_income(income: IncomeBase, db: db_dependency):
+    db_income = models.Income(**income.dict())
+    db.add(db_income)
+    db.commit()
+    db.refresh(db_income)
+    return db_income
 
 @app.post("/transactions/", response_model=TransactionModel)
 async def create_transaction(transaction: TransactionBase, db: db_dependency):
