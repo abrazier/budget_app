@@ -76,13 +76,31 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 models.Base.metadata.create_all(bind=engine)
 
-@app.post("/income/", response_model=IncomeModel)
-async def create_income(income: IncomeBase, db: db_dependency):
-    db_income = models.Income(**income.dict())
-    db.add(db_income)
+@app.post("/budget_categories/", response_model=CategoryModel)
+async def create_budget_category(category: CategoryBase, db: db_dependency):
+    db_budget_category = models.BudgetCategories(**category.dict())
+    db.add(db_budget_category)
     db.commit()
-    db.refresh(db_income)
-    return db_income
+    db.refresh(db_budget_category)
+    return db_budget_category
+
+@app.get("/budget_categories/", response_model=List[CategoryModel])
+async def read_budget_category (db: db_dependency, skip: int = 0, limit: int = 100):
+    budget_category = db.query(models.BudgetCategories).offset(skip).limit(limit).all()
+    return budget_category
+
+@app.post("/budget/", response_model=BudgetModel)
+async def create_budget(budget: BudgetBase, db: db_dependency):
+    db_budget = models.Budget(**budget.dict())
+    db.add(db_budget)
+    db.commit()
+    db.refresh(db_budget)
+    return db_budget
+
+@app.get("/budget/", response_model=List[BudgetModel])
+async def read_budget(db: db_dependency, skip: int = 0, limit: int = 100):
+    budget = db.query(models.Budget).offset(skip).limit(limit).all()
+    return budget
 
 @app.post("/transactions/", response_model=TransactionModel)
 async def create_transaction(transaction: TransactionBase, db: db_dependency):
@@ -96,3 +114,16 @@ async def create_transaction(transaction: TransactionBase, db: db_dependency):
 async def read_transactions(db: db_dependency, skip: int = 0, limit: int = 100):
     transactions = db.query(models.Transaction).offset(skip).limit(limit).all()
     return transactions
+
+@app.post("/income/", response_model=IncomeModel)
+async def create_income(income: IncomeBase, db: db_dependency):
+    db_income = models.Income(**income.dict())
+    db.add(db_income)
+    db.commit()
+    db.refresh(db_income)
+    return db_income
+
+@app.get("/income/", response_model=List[IncomeModel])
+async def read_income(db: db_dependency, skip: int = 0, limit: int = 100):
+    income = db.query(models.Income).offset(skip).limit(limit).all()
+    return income
