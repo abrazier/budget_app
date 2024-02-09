@@ -1,7 +1,8 @@
 import Sidebar from '../components/Sidebar'
 
-export default function Home() {
+export default function Graphs() {
     return (
+        <>
     <div>
         <div class="d-flex" id="wrapper">
             <Sidebar />
@@ -22,5 +23,6 @@ export default function Home() {
             </div>
         </div>
     </div>
+        </>
     )
 }
