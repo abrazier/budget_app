@@ -4,18 +4,10 @@ import api from '..//api'
 
 
 const App = () => {
-    const [ budgets, setBudgets ] = useState([]);
     const [ categories, setCategories ] = useState([]);
     const [ formaData, setFormData ] = useState({
-        year: '',
-        category: 'Restaurants',
-        budget: 0.0
+        category: '',
     });
-
-    const fetchBudgets = async () => {
-        const response = await api.get('/budget/');
-        setBudgets(response.data)
-    };
 
     const fetchCategories = async () => {
         const response = await api.get('/budget_categories/');
@@ -23,7 +15,6 @@ const App = () => {
     };
 
     useEffect(() => {
-        fetchBudgets();
         fetchCategories();
     }, []);
 
@@ -37,12 +28,10 @@ const App = () => {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
-        await api.post('/budget/', formaData);
-        fetchBudgets();
+        await api.post('/budget_categories/', formaData);
+        fetchCategories();
         setFormData({
-            year: '',
-            category: 'Restaurants',
-            budget: 0.0
+            category: '',
         });
     };
 
@@ -59,30 +48,12 @@ const App = () => {
                         <form onSubmit={handleFormSubmit}>
 
                             <div className='mb-3 mt-3'>
-                                <label htmlFor='year' className='form-label'>
-                                    Year
-                                </label>
-                                <input type='text' className='form-control' id='year' name='year' onChange={handleInputChange} value={FormData.year} />
-                            </div>
-
-                            <div className='mb-3'>
                                 <label htmlFor='category' className='form-label'>
                                     Category
                                 </label>
-                                <select className='form-control' id='category' name='category' onChange={handleInputChange} value={FormData.category}>
-                                    { categories ? categories.map((category) => {
-                                        return <option>{category.category}</option>;
-                                    }) : null}
-                                </select>
-
+                                <input type='text' className='form-control' id='category' name='category' onChange={handleInputChange} value={FormData.category} />
                             </div>
 
-                            <div className='mb-3'>
-                                <label htmlFor='budget' className='form-label'>
-                                    Budget
-                                </label>
-                                <input type='number' className='form-control' id='budget' name='budget' onChange={handleInputChange} value={FormData.budget} />
-                            </div>
 
                             <button type='submit' className='btn btn-primary'>
                                 Submit
@@ -93,17 +64,13 @@ const App = () => {
                         <table className='table table-striped table-bordered table-hover mt-3'>
                         <thead>
                             <tr>
-                                <th>Year</th>
                                 <th>Category</th>
-                                <th>Budget</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {budgets.map((budget) => (
-                                <tr key={budget.id}>
-                                    <td>{budget.year}</td>
-                                    <td>{budget.category}</td>
-                                    <td>{budget.budget}</td>
+                            {categories.map((category) => (
+                                <tr key={category.id}>
+                                    <td>{category.category}</td>
                                 </tr>
                             ))}
                         </tbody>

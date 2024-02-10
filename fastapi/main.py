@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from typing import List, Annotated
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import functions
 from pydantic import BaseModel
 from database import SessionLocal, engine
 import models
@@ -21,11 +22,14 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+class BudgetSum(BaseModel):
+    total_budget: float
+
 class CategoryBase(BaseModel):
     category: str
 
 class BudgetBase(BaseModel):
-    year: date
+    year: str
     category: str
     budget: float
 
@@ -33,7 +37,10 @@ class TransactionBase(BaseModel):
     date: date
     category: str
     amount: float
+    chase_card: bool
+    amazon_card: bool
     description: str
+    paid: bool
 
 class IncomeBase(BaseModel):
     year: date
@@ -75,6 +82,11 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 
 models.Base.metadata.create_all(bind=engine)
+
+@app.get("/budget_sum/", response_model=List[BudgetSum])
+async def get_budget_sum (db: db_dependency):
+    budget_sum = db.query(functions.sum(models.Budget.budget).label("total_budget"))
+    return budget_sum
 
 @app.post("/budget_categories/", response_model=CategoryModel)
 async def create_budget_category(category: CategoryBase, db: db_dependency):

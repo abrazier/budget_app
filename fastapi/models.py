@@ -11,7 +11,7 @@ class Budget(Base):
     __tablename__ = 'budget'
 
     id = Column(Integer, primary_key=True, index=True)
-    year = Column(Date)
+    year = Column(String)
     category = Column(String)
     budget = Column(Float)
 
@@ -22,7 +22,10 @@ class Transaction(Base):
     date = Column(Date)
     category = Column(String)
     amount = Column(Float)
+    chase_card = Column(Boolean)
+    amazon_card = Column(Boolean)
     description = Column(String)
+    paid = Column(Boolean)
 
 class Income(Base):
     __tablename__ = 'income'
