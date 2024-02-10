@@ -5,6 +5,8 @@ import Graphs from "./pages/Graphs";
 import Budgets from "./pages/Budgets";
 import NoPage from "./pages/NoPage";
 import BudgetCategories from "./pages/BudgetCategories";
+import ChaseCard from "./pages/ChaseCard";
+import AmazonCard from "./pages/AmazonCard";
 
 export default function App() {
   return (
@@ -20,6 +22,8 @@ export default function App() {
             path="/budget_categories"
             element={<BudgetCategories />}
           ></Route>
+          <Route path="/chase_card" element={<ChaseCard />}></Route>
+          <Route path="/amazon_card" element={<AmazonCard />}></Route>
           <Route path="*" element={<NoPage />}></Route>
         </Routes>
       </BrowserRouter>

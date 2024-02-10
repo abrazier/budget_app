@@ -17,6 +17,18 @@ export default function Sidebar() {
         </a>
         <a
           class="list-group-item list-group-item-action list-group-item-light p-3"
+          href="/chase_card"
+        >
+          Chase Card
+        </a>
+        <a
+          class="list-group-item list-group-item-action list-group-item-light p-3"
+          href="/amazon_card"
+        >
+          Amazon Card
+        </a>
+        <a
+          class="list-group-item list-group-item-action list-group-item-light p-3"
           href="/budgets"
         >
           Budgets

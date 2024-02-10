@@ -95,6 +95,32 @@ db_dependency = Annotated[Session, Depends(get_db)]
 models.Base.metadata.create_all(bind=engine)
 
 
+@app.get("/chase_charges/", response_model=List[TransactionModel])
+async def get_chase_charges(db: db_dependency, skip: int = 0, limit: int = 100):
+    get_chase_charges = (
+        db.query(models.Transaction)
+        .filter(models.Transaction.chase_card == True)
+        .filter(models.Transaction.paid == False)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+    return get_chase_charges
+
+
+@app.get("/amazon_charges/", response_model=List[TransactionModel])
+async def get_amazon_charges(db: db_dependency, skip: int = 0, limit: int = 100):
+    get_amazon_charges = (
+        db.query(models.Transaction)
+        .filter(models.Transaction.amazon_card == True)
+        .filter(models.Transaction.paid == False)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+    return get_amazon_charges
+
+
 @app.get("/budget_sum/", response_model=List[BudgetSum])
 async def get_budget_sum(db: db_dependency):
     budget_sum = db.query(functions.sum(models.Budget.budget).label("total_budget"))

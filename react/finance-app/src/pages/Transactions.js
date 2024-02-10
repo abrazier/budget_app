@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import api from "..//api";
 
 const App = () => {
+  function currencyFormat(num) {
+    return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
   const today = new Date();
   const date = today.setDate(today.getDate());
   const dateToday = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
@@ -202,13 +205,28 @@ const App = () => {
                       <tr key={transaction.id}>
                         <td>{transaction.date}</td>
                         <td>{transaction.category}</td>
-                        <td>{transaction.amount}</td>
+                        <td>{currencyFormat(transaction.amount)}</td>
                         <td>{transaction.chase_card ? "Yes" : "No"}</td>
                         <td>{transaction.amazon_card ? "Yes" : "No"}</td>
                         <td>{transaction.description}</td>
                         <td>{transaction.paid ? "Yes" : "No"}</td>
                       </tr>
                     ))}
+                    <tr>
+                      <td>Totals:</td>
+                      <td>-</td>
+                      <td>
+                        {currencyFormat(
+                          transactions.reduce((acc, item) => {
+                            return acc + item.amount;
+                          }, 0)
+                        )}
+                      </td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
