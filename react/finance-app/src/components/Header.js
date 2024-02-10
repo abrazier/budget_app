@@ -1,5 +1,3 @@
-export default function Header(){
-    return (
-        <h1>Budget App</h1>
-    )
+export default function Header() {
+  return <h1>Budget App</h1>;
 }
