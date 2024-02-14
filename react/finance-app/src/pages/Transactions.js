@@ -6,9 +6,9 @@ const App = () => {
   function currencyFormat(num) {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
-  const today = new Date();
-  const date = today.setDate(today.getDate());
-  const dateToday = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
+  // const today = new Date();
+  // const date = today.setDate(today.getDate());
+  // const dateToday = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
 
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);

@@ -2,6 +2,20 @@ from database import Base
 from sqlalchemy import Column, Integer, String, Boolean, Float, Date
 
 
+class CheckingBalance(Base):
+    __tablename__ = "checking_balance"
+
+    id = Column(Integer, primary_key=True, index=True)
+    checking_balance = Column(Float)
+
+
+class SavingsBalance(Base):
+    __tablename__ = "savings_balance"
+
+    id = Column(Integer, primary_key=True, index=True)
+    savings_balance = Column(Float)
+
+
 class BudgetCategories(Base):
     __tablename__ = "budget_categories"
 

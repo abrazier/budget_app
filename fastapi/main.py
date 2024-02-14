@@ -23,8 +23,20 @@ app.add_middleware(
 )
 
 
+class CheckingBalance(BaseModel):
+    checking_balance: float
+
+
+class SavingsBalance(BaseModel):
+    savings_balance: float
+
+
 class BudgetSum(BaseModel):
     total_budget: float
+
+
+class ChaseSum(BaseModel):
+    chase_total: float
 
 
 class CategoryBase(BaseModel):
@@ -54,6 +66,10 @@ class IncomeBase(BaseModel):
     description: str
 
 
+class Checking(BaseModel):
+    total_budget: float
+
+
 class CategoryModel(CategoryBase):
     id: int
 
@@ -76,6 +92,20 @@ class TransactionModel(TransactionBase):
 
 
 class IncomeModel(IncomeBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CheckingBalanceModel(CheckingBalance):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class SavingsBalanceModel(SavingsBalance):
     id: int
 
     class Config:
@@ -119,6 +149,24 @@ async def get_amazon_charges(db: db_dependency, skip: int = 0, limit: int = 100)
         .all()
     )
     return get_amazon_charges
+
+
+@app.get("/checking_balance/", response_model=List[CheckingBalanceModel])
+async def read_checking_balance(db: db_dependency, skip: int = 0, limit: int = 100):
+    checking_balance = db.query(models.CheckingBalance)
+    return checking_balance
+
+
+@app.get("/savings_balance/", response_model=List[SavingsBalanceModel])
+async def read_savings_balance(db: db_dependency, skip: int = 0, limit: int = 100):
+    savings_balance = db.query(models.SavingsBalance)
+    return savings_balance
+
+
+@app.get("/chase_sum/", response_model=List[ChaseSum])
+async def get_chase_sum(db: db_dependency):
+    chase_sum = db.query(functions.sum(models.Budget.budget).label("chase_total"))
+    return chase_sum
 
 
 @app.get("/budget_sum/", response_model=List[BudgetSum])
